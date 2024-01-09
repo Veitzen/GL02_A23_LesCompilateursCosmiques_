@@ -1,13 +1,14 @@
-const readline = require('readline');
+//const readline = require('readline');
 const { stdin: input, stdout: output } = require('process');
 const fs = require('fs');
-const rl = readline.createInterface({ input, output });
+//const rl = readline.createInterface({ input, output });
 
 
 class iCalendar{
 
-    constructor(listeCours) {
-        this.listeCours = listeCours
+    constructor(listeCours, rl) {
+        this.listeCours = listeCours;
+        this.rl = rl
     }
 
     async execution(){
@@ -131,7 +132,7 @@ class iCalendar{
 
     questionAsync(prompt) {
         return new Promise((resolve) => {
-            rl.question(prompt, resolve);
+            this.rl.question(prompt, resolve);
         });
     }
 
