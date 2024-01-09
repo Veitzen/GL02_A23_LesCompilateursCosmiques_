@@ -35,9 +35,13 @@ class iCalendar{
     }
 
     async questionUtilisateurNomCours(nomsCours){
+        let affichage = '';
         for (let cours in nomsCours){
-            console.log(nomsCours[cours])
+            affichage += nomsCours[cours]+"  ";
+            //console.log(nomsCours[cours])
         }
+        console.log(affichage);
+        console.log("");
         return await this.questionAsync("Ecris un cours que tu as dans le choix ci-dessus : \\n")
 
     }

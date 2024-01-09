@@ -25,7 +25,8 @@ class Main{
             console.log("**************************************************");
             console.log("Bienvenue sur ce programme de gestion d'universite");
             console.log("");
-            choixUtilisateur = await this.questionAsync("1 - Recherche de classe associée à un cours\n2 - Recherche de capacite d'une salle\n3 - Recherche disponibilite d'une salle \n4 - Recherche de salle libre pour un creneau \n5 - Export de l'emploi du temps \n6 - Visualisation des taux des salles \n7 - Generer le classement des salles par capacite d'accueil \n8 - Quitter le logiciel\nChoix --> ");
+            
+           choixUtilisateur = await this.questionAsync("1 - Recherche de classe associée à un cours\n2 - Recherche de capacite d'une salle\n3 - Recherche disponibilite d'une salle \n4 - Recherche de salle libre pour un creneau \n5 - Export de l'emploi du temps \n6 - Visualisation des taux des salles \n7 - Generer le classement des salles par capacite d'accueil \n8 - Quitter le logiciel\nChoix --> ");
             this.isReadlineClose=false;
             switch(choixUtilisateur){
                 case '1' : await this.menuClasseAssocieCours();break;
@@ -44,6 +45,101 @@ class Main{
             }
         }
     }
+
+      // ajout de la fonction 4 ++++++++++++++++++++++
+     async menuSalleLibrePourUnCreaneau() {
+
+      let crenauxUser =[];
+      crenauxUser[0]='';// l'indice 0 correspond au jour
+      console.log("");
+      console.log("Pour proceder à la recherche des salles qui correspondent à votre crénaux, veuillez:");
+      do{
+      crenauxUser[0] = await this.questionAsync("Entrer le jour respectant ce format(L (Lundi)/ MA (Mardi)/ ME (Mercredi)/ J (Jeudi)/ V (Vendredi)/ S (Samedi)/ D (Dimanche)) : ");
+      }while(crenauxUser[0]!=='L' && crenauxUser[0]!='MA' && crenauxUser[0]!=='ME' && crenauxUser[0]!=='J' && crenauxUser[0]!=='V' && crenauxUser[0]!=='S' && crenauxUser[0]!=='D' );
+      console.log("Entrer l'heure de Debut sous format: H:M");
+      crenauxUser[1] = await this.questionAsync("Heure: ");
+      crenauxUser[2] = await this.questionAsync("Minute: ");
+      console.log("Entrer l'heure de Fin sous format: H:M");
+      crenauxUser[3] = await this.questionAsync("Heure: ");
+      crenauxUser[4] = await this.questionAsync("Minute: ");
+      console.log("Les salles associées aux crénaux de  "+crenauxUser[0]+" "+crenauxUser[1]+"h:"+crenauxUser[2]+"-"+crenauxUser[3]+"h:"+crenauxUser[4]+"  sont:");
+
+
+        let sallesPourUnCrenaux = [];
+        // On parcourt les différents cours de l'université
+        for (let i in this.universite.listeCours) {
+            // On parcourt les différents créneaux du cours
+            for (let j in this.universite.listeCours[i].creneau) {
+                // On récupère le nom de la salle
+                let NomSalle = this.universite.listeCours[i].creneau[j].salle.nom;
+                let SalleExistante = false;
+                let accepter=false;
+                
+                //console.log(this.universite.listeCours[i].creneau[j]) test affichage
+                // On parcourt le tableau des salles et des capacités
+                sallesPourUnCrenaux.forEach(CapaciteSalle => {
+                  // Si la salle existe déjà
+                    if (CapaciteSalle.nom === NomSalle || NomSalle == "salle non definie") {
+                        SalleExistante = true;
+                                              
+                    }
+                });
+
+                //comparaison du crenau entrer à ce qui existe
+                if(this.universite.listeCours[i].creneau[j].horaire.jour===crenauxUser[0]){
+                  if(this.universite.listeCours[i].creneau[j].horaire.dateDebut.heure<crenauxUser[1]){
+                    if(this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[3] && this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[1]){
+                          accepter=true;
+                    }else if(this.universite.listeCours[i].creneau[j].horaire.dateFin.heure==crenauxUser[3] && this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[1]){
+                             if(this.universite.listeCours[i].creneau[j].horaire.dateFin.minute>=crenauxUser[4] && this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[1]){
+                                accepter=true;
+                              }
+                            }
+                  }else if(this.universite.listeCours[i].creneau[j].horaire.dateDebut.heure===crenauxUser[1]){
+                          if(this.universite.listeCours[i].creneau[j].horaire.dateDebut.minute<=crenauxUser[4]){
+                              if(this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[3] && this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[1]){
+                                accepter=true;
+                                }else if(this.universite.listeCours[i].creneau[j].horaire.dateFin.heure==crenauxUser[3] && this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[1]){
+                                        if(this.universite.listeCours[i].creneau[j].horaire.dateFin.minute>=crenauxUser[4] && this.universite.listeCours[i].creneau[j].horaire.dateFin.heure>crenauxUser[1]){
+                                          accepter=true;
+                                        }
+                                      }
+                            }
+
+                    }
+                }
+
+
+                    // Si la salle n'existe pas
+                    if (!SalleExistante && NomSalle !== "salle non definie" && accepter===true) {
+                        // On crée une nouvelle ligne avec la salle et sa capacité
+                        let NouvellePersonne = {
+                            nom: this.universite.listeCours[i].creneau[j].salle.nom
+                        };
+                        // On l'ajoute au tableau
+                        sallesPourUnCrenaux.push(NouvellePersonne);
+                    }
+                }
+            }
+
+            
+        if(sallesPourUnCrenaux.length===0){
+          console.log("Aucun salle n'est disponible pour ce crénaux")
+
+        }else{
+            let affichage = '';
+            sallesPourUnCrenaux.forEach(CapaciteSalle=>{affichage += `${CapaciteSalle.nom}  `;});
+            console.log(affichage);
+        } 
+
+
+          let choixfermeture = await this.questionAsync("Taper sur entrer pour continuer");
+          
+          console.clear();            
+            
+            
+        }
+    
 
     async menuExportEmploiDuTemps(){
         console.clear();
@@ -74,8 +170,22 @@ class Main{
     
     // Méthode pour afficher la capacité d'une salle donnée :
     async menuCapaciteSalle() {
+
+      
       // on stock le tableau des salles et de leurs capacité dans la variable CapaciteSalles
       let CapaciteSalles = this.CreationTableauCapacite();
+
+        // debut test amélioration +++++++++++++++++++++++++++++++++++
+        //console.clear();
+        
+        console.log("**************************************************");
+        console.log("*** Liste des salles ***");
+        console.log();
+        let affichage = '';
+        CapaciteSalles.forEach(CapaciteSalle=>{affichage += `${CapaciteSalle.nom}  `;});
+        console.log(affichage);
+        //fin test
+
       let choix = "oui";
       do {
           let SalleDemander = await this.questionAsync("Écrire le nom de la salle : ");
@@ -90,15 +200,13 @@ class Main{
           });
           //si la salle n'a pas été trouvé dans le tableau
           if (!trouve){
-              console.log("Cette salle n'existe pas.");
+              console.log("Cette salle n'appartient pas à celle afficher.");
           }
           choix = await this.questionAsync("Veux-tu continuer à chercher les capacités d'une salle ? (tape oui ou non) ");
       }while(choix=='oui')
-      let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
-          if (choixfermeture == "non"){
-              rl.close;
-              this.isReadlineClose = true;
-          }
+
+      let choixfermeture = await this.questionAsync("Taper sur entrer pour continuer");
+          
           console.clear();
     }
 
@@ -114,14 +222,15 @@ class Main{
                 // On récupère le nom de la salle
                 let NomSalle = this.universite.listeCours[i].creneau[j].salle.nom;
                 let SalleExistante = false;
-
+                
                 // On parcourt le tableau des salles et des capacités
                 CapaciteSalles.forEach(CapaciteSalle => {
-                    // Si la salle existe déjà
+                    
+                  // Si la salle existe déjà
                     if (CapaciteSalle.nom === NomSalle || NomSalle == "salle non definie") {
                         SalleExistante = true;
                         // On met à jour la capacité du tableau si elle est inférieure
-                        if (parseInt(CapaciteSalle.capacite) < parseInt(this.universite.listeCours[i].creneau[j].nombreEleve)) {
+                        if (CapaciteSalle.capacite < this.universite.listeCours[i].creneau[j].nombreEleve) {
                             CapaciteSalle.capacite = this.universite.listeCours[i].creneau[j].nombreEleve;
                         }
                     }
@@ -139,7 +248,11 @@ class Main{
                     }
                 }
             }
-            //console.log (CapaciteSalles);
+            /* test d'affichage des capacites ++++++++++++++++++++++
+            let affichag = 'STOP';
+            CapaciteSalles.forEach(CapaciteSalle=>{affichag += `${CapaciteSalle.capacite}  `;});
+            console.log(affichag);  */
+            
             return CapaciteSalles;
         }
 
@@ -152,11 +265,8 @@ class Main{
               });
             console.log("Tableau des salles et de leurs capacités, triés par ordre croissant :");
             console.log(CapaciteSalles);
-            let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
-            if (choixfermeture == "non"){
-                rl.close;
-                this.isReadlineClose = true;
-            }
+            let choixfermeture = await this.questionAsync("Taper sur entrer pour continuer");
+            
             console.clear();
         }
     
@@ -180,16 +290,21 @@ class Main{
     //SPEC1
     //Permet d'obtenir les salles asssociées à un cours
     async menuClasseAssocieCours(){
-        console.clear();
+        //console.clear();
         console.log("**************************************************");
-        console.log("*** Voici les salles qui sont accosiées à un cours ***")
+        console.log("*** Liste des cours ***");
+        console.log();
 
         const sallesCours = new Map();
         let listeSalle = new Array();
 
         let listeCours = this.universite.getCours();
-        listeCours.forEach(cours=>console.log(`${cours.nom}`));
-        
+        // debut test amélioration +++++++++++++++++++++++++++++++++++
+        let affichage = '';
+        listeCours.forEach(cours=>{affichage += `${cours.nom}  `;});
+        console.log(affichage);
+        //fin test
+
         listeCours.forEach((cours) => {
             
             cours.getCreneaux().forEach((creneau) => {
@@ -211,15 +326,16 @@ class Main{
                 console.log(`Le cours ${coursDemande} est associé aux salles :`);
                 sallesCours.get(coursDemande).forEach((salle)=>console.log(salle));
             }else{
-                console.log("Le cours demandé n'est pas dispensé dans cet établissement");
+                console.log("Le cours demandé n'appartient pas à la liste afficher");
             }
-            choix = await this.questionAsync("Veux tu continuer a chercher des associations cours/salles (oui/non) : ");
+            break;
+            //choix = await this.questionAsync("Veux tu continuer a chercher des associations cours/salles (oui/non) : ");
             while(choix!='oui' && choix!='non'){
                 console.log('veuillez rentrer oui ou non');
                 choix = await this.questionAsync("Veux tu continuer a chercher des associations cours/salles (oui/non) : ");
             }
         }while(choix=='oui');
-    
+        choix = await this.questionAsync("Taper sur entrer pour continuer");
         console.clear();
     }
 
@@ -231,6 +347,19 @@ class Main{
     // Méthode pour vérifier la disponibilité pour une salle donnée
     
     async menuDisponibiliteDuneSalle() {
+
+        // debut test amélioration +++++++++++++++++++++++++++++++++++
+        //console.clear();
+        let CapaciteSalles = this.CreationTableauCapacite();
+        console.log("**************************************************");
+        console.log("*** Liste des salles ***");
+        console.log();
+        let affichage = '';
+        CapaciteSalles.forEach(CapaciteSalle=>{affichage += `${CapaciteSalle.nom}  `;});
+        console.log(affichage);
+        //fin test
+
+
       const SalleDemande = await this.questionAsync("Ecrire le nom de la salle : ");
       // Vérifier l'existence d'une salle
       let salleExiste = false;
@@ -264,11 +393,8 @@ class Main{
     console.log("Créneaux libres par jour :");
     console.log(creneauxLibresParJour);
     }
-    let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
-            if (choixfermeture == "non"){
-                rl.close;
-                this.isReadlineClose = true;
-            }
+    let choixfermeture = await this.questionAsync("Taper sur entrer pour continuer");
+            
             console.clear();   
   }
 
@@ -340,11 +466,8 @@ class Main{
     console.log("Le taux d'occupation des différentes salles : ");
     console.log(Occupationtotale);
     await this.genererFichierExcel(Occupationtotale);
-    let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
-            if (choixfermeture == "non"){
-                rl.close;
-                this.isReadlineClose = true;
-            }
+    let choixfermeture = await this.questionAsync("Taper sur entrer pour continuer");
+            
     console.clear();
   }
   NosSalles(){
