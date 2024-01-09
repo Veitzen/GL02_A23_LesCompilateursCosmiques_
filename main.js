@@ -40,7 +40,7 @@ class Main{
             }
             if(this.isReadlineClose){
                 console.log("\nFermeture en cours...");
-                break;
+                return process.exit(1);
             }
         }
     }
