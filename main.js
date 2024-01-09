@@ -48,7 +48,7 @@ class Main{
     async menuExportEmploiDuTemps(){
         console.clear();
         const ICalendar = require('./iCalendar.js');
-        let iCal = new ICalendar(this.universite.listeCours);
+        let iCal = new ICalendar(this.universite.listeCours, rl);
         let choix;
         do {
             let cours = []
