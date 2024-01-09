@@ -65,7 +65,7 @@ class Main{
             await iCal.creerICalendar(cours)
             while(choix!='oui' && choix!='non'){
                 console.log('veuillez rentrer oui ou non');
-                choix = await this.questionAsync("Veux tu créer un autre emploie du temps à exporter ? (oui/non) : ");
+                choix = await this.questionAsync("Voulez-vous créer un autre emploi du temps à exporter ? (oui/non) :\n");
             }
         } while (choix=='oui')
 
@@ -78,7 +78,7 @@ class Main{
       let CapaciteSalles = this.CreationTableauCapacite();
       let choix = "oui";
       do {
-          let SalleDemander = await this.questionAsync("Écrire le nom de la salle : ");
+          let SalleDemander = await this.questionAsync("Écrivez le nom de la salle :\n");
           let trouve = false;
           //on parcourt le tableau
           CapaciteSalles.forEach(CapaciteSalle => {
@@ -92,9 +92,9 @@ class Main{
           if (!trouve){
               console.log("Cette salle n'existe pas.");
           }
-          choix = await this.questionAsync("Veux-tu continuer à chercher les capacités d'une salle ? (tape oui ou non) ");
+          choix = await this.questionAsync("Voulez-vous continuer à chercher les capacités d'une salle ? (tapez oui ou non)\n");
       }while(choix=='oui')
-      let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
+      let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non)\n");
           if (choixfermeture == "non"){
               rl.close;
               this.isReadlineClose = true;
@@ -152,7 +152,7 @@ class Main{
               });
             console.log("Tableau des salles et de leurs capacités, triés par ordre croissant :");
             console.log(CapaciteSalles);
-            let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
+            let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non)\n");
             if (choixfermeture == "non"){
                 rl.close;
                 this.isReadlineClose = true;
@@ -206,17 +206,17 @@ class Main{
         
         let choix;
         do{
-            let coursDemande = await this.questionAsync("ecrire le nom du cours : ")
+            let coursDemande = await this.questionAsync("Ecrivez le nom du cours :\n")
             if(sallesCours.has(coursDemande)){
                 console.log(`Le cours ${coursDemande} est associé aux salles :`);
                 sallesCours.get(coursDemande).forEach((salle)=>console.log(salle));
             }else{
                 console.log("Le cours demandé n'est pas dispensé dans cet établissement");
             }
-            choix = await this.questionAsync("Veux tu continuer a chercher des associations cours/salles (oui/non) : ");
+            choix = await this.questionAsync("Voulez-vous continuer a chercher des associations cours/salles ? (oui/non) :\n");
             while(choix!='oui' && choix!='non'){
                 console.log('veuillez rentrer oui ou non');
-                choix = await this.questionAsync("Veux tu continuer a chercher des associations cours/salles (oui/non) : ");
+                choix = await this.questionAsync("Voulez-vous continuer a chercher des associations cours/salles ? (oui/non) :\n");
             }
         }while(choix=='oui');
     
@@ -231,7 +231,7 @@ class Main{
     // Méthode pour vérifier la disponibilité pour une salle donnée
     
     async menuDisponibiliteDuneSalle() {
-      const SalleDemande = await this.questionAsync("Ecrire le nom de la salle : ");
+      const SalleDemande = await this.questionAsync("Ecrivez le nom de la salle :\n");
       // Vérifier l'existence d'une salle
       let salleExiste = false;
 
@@ -264,7 +264,7 @@ class Main{
     console.log("Créneaux libres par jour :");
     console.log(creneauxLibresParJour);
     }
-    let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
+    let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'accueil ? (tapez oui ou non)\n");
             if (choixfermeture == "non"){
                 rl.close;
                 this.isReadlineClose = true;
@@ -340,7 +340,7 @@ class Main{
     console.log("Le taux d'occupation des différentes salles : ");
     console.log(Occupationtotale);
     await this.genererFichierExcel(Occupationtotale);
-    let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'acceuil ? (tapez oui ou non) ");
+    let choixfermeture = await this.questionAsync("Voulez-vous retourner à l'écran d'accueil ? (tapez oui ou non)\n");
             if (choixfermeture == "non"){
                 rl.close;
                 this.isReadlineClose = true;
