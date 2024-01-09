@@ -237,7 +237,7 @@ class Main{
 
       this.universite.getCours().forEach((cours) => {
           cours.getCreneaux().forEach((creneau) => {
-              if (creneau.salle.nom === SalleDemande) {
+              if (creneau.salle.nom === SalleDemande || creneau.salle.nom.toLowerCase() === SalleDemande) {
                   salleExiste = true;
               }
           });
@@ -324,7 +324,7 @@ class Main{
     // Remplir dictionnaireSemaine avec les créneaux occupés pour la salle spécifiée
     this.universite.getCours().forEach((cours) => {
       cours.getCreneaux().forEach((creneau) => {
-        if (creneau.salle.nom === SalleChercher) {
+        if (creneau.salle.nom === SalleChercher|| creneau.salle.nom.toLowerCase() === SalleChercher) {
           //console.log(creneau.horaire.jour);
           dictionnaireSemaine[creneau.horaire.jour].push(`${creneau.horaire.dateDebut.heure}:${creneau.horaire.dateDebut.minute}-${creneau.horaire.dateFin.heure}:${creneau.horaire.dateFin.minute}`);
         }
