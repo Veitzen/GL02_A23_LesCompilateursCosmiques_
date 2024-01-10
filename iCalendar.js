@@ -72,8 +72,38 @@ class iCalendar{
 
     async creerICalendar(allCours){
         let uid = 1
-        let answerDateDebut = await new Date(await this.questionAsync("Ecrit la date du début du calendrier du type (yyyy-mm-dd)"))
-        let answerDateFin = await new Date(await this.questionAsync("Ecrit la date de fin du calendrier du type (yyyy-mm-dd)"))
+        //let answerDateDebut = await new Date(await this.questionAsync("Ecrit la date du début du calendrier du type (yyyy-mm-dd)"))
+        //let answerDateFin = await new Date(await this.questionAsync("Ecrit la date de fin du calendrier du type (yyyy-mm-dd)"))
+        let isValidStartDate = false;
+        let isValidEndDate = false;
+        let answerDateDebut, answerDateFin;
+
+        while (!isValidStartDate) {
+            let startDate = await this.questionAsync("Ecrit la date du début du calendrier du type (yyyy-mm-dd)");
+    
+            answerDateDebut = new Date(startDate);
+    
+            if (isNaN(answerDateDebut.getTime())) {
+                console.log("Date de début invalide. Veuillez entrer une date valide.");
+            } else {
+                isValidStartDate = true;
+            }
+        }
+
+        while (!isValidEndDate) {
+            let endDate = await this.questionAsync("Ecrit la date de fin du calendrier du type (yyyy-mm-dd)");
+    
+            answerDateFin = new Date(endDate);
+    
+            if (isNaN(answerDateFin.getTime())){
+                console.log("Date de fin invalide. Veuillez entrer une date valide.");
+            } else if (answerDateDebut > answerDateFin) {
+                console.log("Date de fin invalide. Entrez une date de fin postérieure à la date de début.");
+            } else {
+                isValidEndDate = true;
+            }
+        }
+        
         let Icalendar = "BEGIN:VCALENDAR\n" +
             "VERSION:2.0\n" +
             "PRODID/-//LESBOSSDUCDC//CLIENT/FR\n";
