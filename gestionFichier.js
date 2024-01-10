@@ -76,8 +76,12 @@ class GestionFichier{
                     
                     //si la salle n'est pas déjà crée on la crée et on l'ajoute
                     if(!ecole.isLaSalleEstCreeAPartirDunNom(salleNom)){
-                        salle = new Salle(salleNom);
-                        ecole.addSalle(salle);
+                        if(salleNom=="salle non definie"){
+                            console.log("salle non definie trouvé");
+                        } else {
+                            salle = new Salle(salleNom);
+                            ecole.addSalle(salle);
+                        }
                     }
                     //sinon on la récupère
                     else{

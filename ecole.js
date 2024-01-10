@@ -24,7 +24,7 @@ class Ecole{
         let checkSalleDejaCree=false;
         this.listeSalle.forEach((salleDejaCree)=>{
             if(salleDejaCree.nom==salleNom){
-                return(checkSalleDejaCree);
+                return(!checkSalleDejaCree);
             }
         });
 
