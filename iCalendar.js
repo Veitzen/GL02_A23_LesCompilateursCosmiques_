@@ -80,8 +80,13 @@ class iCalendar{
         while (answerDateDebut.getTime() < answerDateFin.getTime()){
             for (let cours in allCours){
                 if(this.dictionnaireJours[allCours[cours][1].horaire.jour].jour === this.dictionnaireChiffreToJour[answerDateDebut.getDay()].jour){
+                    const date = new Date();
+                    let dateISO = date.toISOString();
+                    dateISO = dateISO.replaceAll("-", "").replaceAll(":", "").replaceAll(".", "");
+                    dateISO = dateISO.substring(0, dateISO.length - 4) + "Z";
                     Icalendar += "BEGIN:VEVENT\n" +
                         `UID:${uid}\n` +
+                        `DTSTAMP:${dateISO}\n` +
                         `LOCATION:${allCours[cours][1].salle.nom}\n` +
                         `SUMMARY:Cours\n` +
                         `DESCRIPTION:Cours de ${allCours[cours][0]} en :${allCours[cours][1].salle.nom}\n` +
